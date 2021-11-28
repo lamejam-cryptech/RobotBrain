@@ -55,6 +55,7 @@ namespace RobotBrain {
                 return new SyntaxTree.QuitExpr ();
             else if (tok.match (Keyword.KeywordStop))
                 return new SyntaxTree.StopExpr ();
+
             else if (tok.match (Keyword.KeywordHelp))
                 return new SyntaxTree.HelpExpr ();
             else if (tok.match (Keyword.KeywordLet))
@@ -63,6 +64,7 @@ namespace RobotBrain {
                 return parseEcho (parser);
             else if (tok.match (Keyword.KeywordLandmark))
                 return new SyntaxTree.LandmarkExpr ();
+
             else if (tok.match (Keyword.KeywordRotate))
                 return parseRotate (parser);
             else if (tok.match (Keyword.KeywordMove))

@@ -135,6 +135,20 @@ namespace RobotBrain
         }
 
 
+        public sealed class BrainEcho : BrainCommand
+        {
+            public readonly Identifier ident;
+
+            public BrainEcho (Identifier ident) {
+                this.ident = ident;
+            }
+
+            public override string show () {
+                return $"echo {ident.name}";
+            }
+        }
+
+
         public sealed class BrainRotate : BrainCommand
         {
             public readonly SyntaxTree angleExpr;
@@ -205,6 +219,10 @@ namespace RobotBrain
                 case SyntaxTree.HelpExpr expr:
                     return new XList.Cons
                         ( new BrainCommand.BrainHelp (), con1 );
+
+                case SyntaxTree.EchoExpr expr:
+                    return new XList.Cons
+                        ( new BrainCommand.BrainEcho (expr.ident), con1 );
 
                 case SyntaxTree.RotateExpr expr: {
                     BrainCommand cmd = new BrainCommand.BrainRotate

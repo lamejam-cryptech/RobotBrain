@@ -7,20 +7,78 @@ namespace RobotBrain {
 
     public class Brain
     {
+        public const string helpMessage
+            = "help\n"
+            + " -> list available commands\n"
+            + "let name = expr\n"
+            + " -> save an expression\n"
+            + "move (name|number)\n"
+            + " -> move a certain distance\n"
+            + "rotate (name|number)\n"
+            + " -> rotate by a certain angle\n";
+
         private Dictionary<string, SyntaxTree> variables;
 
         private bool endGame;
 
-        private Queue<string> errorQueue;
-        private Queue<MechCommand> commandQueue;
+        public bool shouldEndGame() {
+            return endGame;
+        }
+
+
+        private Queue<string>       errorQueue;
+        
+        public bool hasErrors() {
+            return errorQueue.Count > 0;
+        }
+
+        public string nextError() {
+            return errorQueue.Dequeue();
+        }
+
+        public string peekError() {
+            return errorQueue.Peek();
+        }
+
+
+        private Queue<string>       stdOut;
+
+        public bool hasStdOut() {
+            return stdOut.Count > 0;
+        }
+
+        public string nextStdOut() {
+            return stdOut.Dequeue();
+        }
+
+        public string peekStdOut() {
+            return stdOut.Peek();
+        }
+
+
+        private Queue<MechCommand>  commandQueue;
+
+        public bool hasCommands(){
+            return commandQueue.Count > 0;
+        }
+
+        public MechCommand nextCommand(){
+            return commandQueue.Dequeue();
+        }
+
+        public MechCommand peekCommand(){
+            return commandQueue.Peek();
+        }
+
 
         public Brain () {
             this.variables = new Dictionary<string, SyntaxTree> ();
 
             this.endGame = false;
 
-            this.errorQueue = new Queue<string> ();
-            this.commandQueue = new Queue<MechCommand> ();
+            this.errorQueue     = new Queue<string> ();
+            this.stdOut         = new Queue<string> ();
+            this.commandQueue   = new Queue<MechCommand> ();
         }
 
 
@@ -57,6 +115,14 @@ namespace RobotBrain {
                 case BrainCommand.BrainEval evalCmd:
                     SyntaxTree evalTree = variables[evalCmd.ident.name];
                     processTree(evalTree);
+                    break;
+
+                case BrainCommand.BrainHelp helpCmd:
+                    stdOut.Enqueue (helpMessage);
+                    break;
+
+                case BrainCommand.BrainEcho echoCmd:
+                    stdOut.Enqueue (variables[echoCmd.ident.name].show ());
                     break;
 
                 case BrainCommand.BrainRotate rotCmd:
@@ -99,37 +165,7 @@ namespace RobotBrain {
             SyntaxTree tree = Parser.parseLine (cmdLine);
             processTree (tree);
         }
-
-
-        public bool hasErrors () {
-            return errorQueue.Count > 0;
-        }
-
-        public string nextError () {
-            return errorQueue.Dequeue ();
-        }
-
-        public string peekError () {
-            return errorQueue.Peek ();
-        }
-
-
-        public bool shouldEndGame () {
-            return endGame;
-        }
-
-
-        public bool hasCommands () {
-            return commandQueue.Count > 0;
-        }
-
-        public MechCommand nextCommand () {
-            return commandQueue.Dequeue ();
-        }
-
-        public MechCommand peekCommand () {
-            return commandQueue.Peek ();
-        }
+        
     }
 
 }
