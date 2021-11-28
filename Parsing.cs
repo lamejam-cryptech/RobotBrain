@@ -70,6 +70,17 @@ namespace RobotBrain {
             else if (tok.match (Keyword.KeywordMove))
                 return parseMove (parser);
 
+            else if (tok.match (Keyword.KeywordBuy))
+                return parseBuy (parser);
+            else if (tok.match (Keyword.KeywordSell))
+                return parseSell (parser);
+            else if (tok.match (Keyword.KeywordInventory))
+                return new SyntaxTree.InventoryExpr ();
+            else if (tok.match (Keyword.KeywordMarketPrices))
+                return new SyntaxTree.MarketPricesExpr ();
+            else if (tok.match (Keyword.KeywordCityPrices))
+                return new SyntaxTree.CityPricesExpr ();
+
             // If the token is an identifier but not a keyword, return it
             // as a variable.
             else if (tok.isIdentifier ())
@@ -157,6 +168,29 @@ namespace RobotBrain {
 
             return new SyntaxTree.MoveExpr
                 (parseExpression1(parser));
+        }
+
+
+        public static SyntaxTree parseBuy (Parser parser) {
+            Token nameTok = parser.current ();
+            if (!nameTok.isIdentifier ())
+                return new SyntaxTree.SyntaxError
+                    ("expected identifier");
+            parser.consume ();
+            
+            return new SyntaxTree.BuyExpr
+                (nameTok.ident, parseExpression1 (parser));
+        }
+
+        public static SyntaxTree parseSell (Parser parser) {
+            Token nameTok = parser.current ();
+            if (!nameTok.isIdentifier ())
+                return new SyntaxTree.SyntaxError
+                    ("expected identifier");
+            parser.consume ();
+
+            return new SyntaxTree.SellExpr
+                (nameTok.ident, parseExpression1 (parser));
         }
     }
     

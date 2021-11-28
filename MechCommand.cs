@@ -46,6 +46,65 @@ namespace RobotBrain {
             }
         }
 
+
+        public sealed class MechBuy : MechCommand
+        {
+            public readonly string commodityName;
+            public readonly int count;
+
+            public MechBuy (string name, int count) {
+                this.commodityName = name;
+                this.count = count;
+            }
+
+            public override string show () {
+                return $"buy {commodityName} {count}";
+            }
+        }
+
+        public sealed class MechSell : MechCommand
+        {
+            public readonly string commodityName;
+            public readonly int count;
+
+            public MechSell (string name, int count) {
+                this.commodityName = name;
+                this.count = count;
+            }
+
+            public override string show () {
+                return $"sell {commodityName} {count}";
+            }
+        }
+
+
+        public sealed class MechInventory : MechCommand
+        {
+            public MechInventory () { }
+
+            public override string show () {
+                return "inventory";
+            }
+        }
+
+        public sealed class MechMarketPrices : MechCommand
+        {
+            public MechMarketPrices () { }
+
+            public override string show () {
+                return "marketPrices";
+            }
+        }
+
+        public sealed class MechCityPrices : MechCommand
+        {
+            public MechCityPrices () { }
+
+            public override string show () {
+                return "cityPrices";
+            }
+        }
+
     }
 
 }

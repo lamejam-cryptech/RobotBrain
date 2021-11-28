@@ -14,7 +14,13 @@ namespace RobotBrain {
         KeywordLandmark,
         // Movement keywords
         KeywordRotate,
-        KeywordMove
+        KeywordMove,
+        // Merchant keywords
+        KeywordBuy,
+        KeywordSell,
+        KeywordInventory,
+        KeywordMarketPrices,
+        KeywordCityPrices
     }
 
     public enum Symbol {
@@ -128,15 +134,21 @@ namespace RobotBrain {
 
         public Lexer (string source) {
             keywords = new Dictionary<string, Keyword> ();
-            keywords.Add ("quit"    , Keyword.KeywordQuit);
-            keywords.Add ("stop"    , Keyword.KeywordStop);
-            keywords.Add ("help"    , Keyword.KeywordHelp);
-            keywords.Add ("let"     , Keyword.KeywordLet);
-            keywords.Add ("echo"    , Keyword.KeywordEcho);
-            keywords.Add ("landmark", Keyword.KeywordLandmark);
+            keywords.Add ("quit"        , Keyword.KeywordQuit);
+            keywords.Add ("stop"        , Keyword.KeywordStop);
+            keywords.Add ("help"        , Keyword.KeywordHelp);
+            keywords.Add ("let"         , Keyword.KeywordLet);
+            keywords.Add ("echo"        , Keyword.KeywordEcho);
+            keywords.Add ("landmark"    , Keyword.KeywordLandmark);
             // Movement keywords
-            keywords.Add ("rotate"  , Keyword.KeywordRotate);
-            keywords.Add ("move"    , Keyword.KeywordMove);
+            keywords.Add ("rotate"      , Keyword.KeywordRotate);
+            keywords.Add ("move"        , Keyword.KeywordMove);
+            // Merchant keywords
+            keywords.Add ("buy"         , Keyword.KeywordBuy);
+            keywords.Add ("sell"        , Keyword.KeywordSell);
+            keywords.Add ("inventory"   , Keyword.KeywordInventory);
+            keywords.Add ("marketprices", Keyword.KeywordMarketPrices);
+            keywords.Add ("cityprices"  , Keyword.KeywordCityPrices);
 
             this.source = source;
             this.position = 0;

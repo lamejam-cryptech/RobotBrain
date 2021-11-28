@@ -177,6 +177,67 @@ namespace RobotBrain
                 return $"move {distanceExpr.show()}";
             }
         }
+
+
+        public sealed class BrainBuy : BrainCommand
+        {
+            public readonly Identifier commodityName;
+            public readonly SyntaxTree countExpr;
+
+            public BrainBuy (Identifier name, SyntaxTree count) {
+                this.commodityName = name;
+                this.countExpr = count;
+            }
+
+            public override string show () {
+                return $"buy {commodityName.name} {countExpr.show ()}";
+            }
+        }
+
+
+        public sealed class BrainSell : BrainCommand
+        {
+            public readonly Identifier commodityName;
+            public readonly SyntaxTree countExpr;
+
+            public BrainSell(Identifier name, SyntaxTree count) {
+                this.commodityName = name;
+                this.countExpr = count;
+            }
+
+            public override string show () {
+                return $"sell {commodityName.name} {countExpr.show()}";
+            }
+        }
+
+
+        public sealed class BrainInventory : BrainCommand
+        {
+            public BrainInventory () { }
+
+            public override string show () {
+                return "inventory";
+            }
+        }
+
+        public sealed class BrainMarketPrices : BrainCommand
+        {
+            public BrainMarketPrices () { }
+
+            public override string show () {
+                return "marketPrices";
+            }
+        }
+
+        public sealed class BrainCityPrices : BrainCommand
+        {
+            public BrainCityPrices () { }
+
+            public override string show () {
+                return "cityPrices";
+            }
+        }
+
     }
 
 
@@ -199,42 +260,60 @@ namespace RobotBrain
                     return new XList.Cons
                         (new BrainCommand.BrainStop(), con1);
 
-                case SyntaxTree.ContinueExpr expr:
-                    XList con2 = walkTreeConvert (expr.cexpr, con1);
-                    XList con3 = walkTreeConvert (expr.lexpr, con2);
+                case SyntaxTree.ContinueExpr contExpr:
+                    XList con2 = walkTreeConvert (contExpr.cexpr, con1);
+                    XList con3 = walkTreeConvert (contExpr.lexpr, con2);
                     return con3;
 
-                case SyntaxTree.LetExpr expr: {
-                    BrainCommand cmd = new BrainCommand.BrainLet
-                        (expr.lhs, expr.rhs);
-                    return new XList.Cons (cmd, con1);
-                }
+                case SyntaxTree.LetExpr letExpr:
+                    BrainCommand letCmd = new BrainCommand.BrainLet
+                        (letExpr.lhs, letExpr.rhs);
+                    return new XList.Cons (letCmd, con1);
 
-                case SyntaxTree.IdentifierExpr expr: {
-                    BrainCommand cmd = new BrainCommand.BrainEval
-                        (expr.ident);
-                    return new XList.Cons (cmd, con1);
-                }
+                case SyntaxTree.IdentifierExpr identExpr:
+                    BrainCommand evalCmd = new BrainCommand.BrainEval
+                        (identExpr.ident);
+                    return new XList.Cons (evalCmd, con1);
 
-                case SyntaxTree.HelpExpr expr:
+                case SyntaxTree.HelpExpr helpExpr:
                     return new XList.Cons
                         ( new BrainCommand.BrainHelp (), con1 );
 
-                case SyntaxTree.EchoExpr expr:
+                case SyntaxTree.EchoExpr echoExpr:
                     return new XList.Cons
-                        ( new BrainCommand.BrainEcho (expr.ident), con1 );
+                        ( new BrainCommand.BrainEcho (echoExpr.ident), con1 );
 
-                case SyntaxTree.RotateExpr expr: {
-                    BrainCommand cmd = new BrainCommand.BrainRotate
-                        (expr.angleExpr);
-                    return new XList.Cons (cmd, con1);
-                }
+                case SyntaxTree.RotateExpr rotExpr:
+                    BrainCommand rotCmd = new BrainCommand.BrainRotate
+                        (rotExpr.angleExpr);
+                    return new XList.Cons (rotCmd, con1);
 
-                case SyntaxTree.MoveExpr expr: {
-                    BrainCommand cmd = new BrainCommand.BrainMove
-                        (expr.distanceExpr);
-                    return new XList.Cons (cmd, con1);
-                }
+                case SyntaxTree.MoveExpr movExpr:
+                    BrainCommand movCmd = new BrainCommand.BrainMove
+                        (movExpr.distanceExpr);
+                    return new XList.Cons (movCmd, con1);
+
+                case SyntaxTree.BuyExpr buyExpr:
+                    BrainCommand buyCmd = new BrainCommand.BrainBuy
+                        (buyExpr.commodityName, buyExpr.countExpr);
+                    return new XList.Cons (buyCmd, con1);
+
+                case SyntaxTree.SellExpr sellExpr:
+                    BrainCommand sellCmd = new BrainCommand.BrainSell
+                        (sellExpr.commodityName, sellExpr.countExpr);
+                    return new XList.Cons (sellCmd, con1);
+
+                case SyntaxTree.InventoryExpr invExpr:
+                    return new XList.Cons
+                        (new BrainCommand.BrainInventory (), con1);
+
+                case SyntaxTree.MarketPricesExpr pricesExpr:
+                    return new XList.Cons
+                        (new BrainCommand.BrainMarketPrices (), con1);
+
+                case SyntaxTree.CityPricesExpr pricesExpr:
+                    return new XList.Cons
+                        (new BrainCommand.BrainCityPrices (), con1);
 
 
                 default:

@@ -7,16 +7,7 @@ namespace RobotBrain {
 
     public class Brain
     {
-        public const string helpMessage
-            = "help\n"
-            + " -> list available commands\n"
-            + "let name = expr\n"
-            + " -> save an expression\n"
-            + "move (name|number)\n"
-            + " -> move a certain distance\n"
-            + "rotate (name|number)\n"
-            + " -> rotate by a certain angle\n";
-
+        
         private Dictionary<string, SyntaxTree> variables;
 
         private bool endGame;
@@ -26,7 +17,7 @@ namespace RobotBrain {
         }
 
 
-        private Queue<string>       errorQueue;
+        private Queue<string> errorQueue;
         
         public bool hasErrors() {
             return errorQueue.Count > 0;
@@ -41,7 +32,17 @@ namespace RobotBrain {
         }
 
 
-        private Queue<string>       stdOut;
+        public const string helpMessage
+            = "help\n"
+            + " -> list available commands\n"
+            + "let name = expr\n"
+            + " -> save an expression\n"
+            + "move (name|number)\n"
+            + " -> move a certain distance\n"
+            + "rotate (name|number)\n"
+            + " -> rotate by a certain angle\n";
+
+        private Queue<string> stdOut;
 
         public bool hasStdOut() {
             return stdOut.Count > 0;
@@ -56,7 +57,7 @@ namespace RobotBrain {
         }
 
 
-        private Queue<MechCommand>  commandQueue;
+        private Queue<MechCommand> commandQueue;
 
         public bool hasCommands(){
             return commandQueue.Count > 0;
@@ -126,20 +127,56 @@ namespace RobotBrain {
                     break;
 
                 case BrainCommand.BrainRotate rotCmd:
-                    if (evalExpr(rotCmd.angleExpr) is int rotAngle) {
+                    if (evalExpr (rotCmd.angleExpr) is int rotAngle) {
                         MechCommand mechRotCmd = new MechCommand.MechRotate
                             (rotAngle);
-                        commandQueue.Enqueue(mechRotCmd);
+                        commandQueue.Enqueue (mechRotCmd);
                     }
                     break;
 
                 case BrainCommand.BrainMove movCmd:
-                    if (evalExpr(movCmd.distanceExpr) is int movDist) {
+                    if (evalExpr (movCmd.distanceExpr) is int movDist) {
                         MechCommand mechMovCmd = new MechCommand.MechMove
                             (movDist);
-                        commandQueue.Enqueue(mechMovCmd);
+                        commandQueue.Enqueue (mechMovCmd);
                     }
                     break;
+
+                case BrainCommand.BrainBuy buyCmd:
+                    if (evalExpr (buyCmd.countExpr) is int buyCount) {
+                        MechCommand mechBuyCmd = new MechCommand.MechBuy
+                            (buyCmd.commodityName.name, buyCount);
+                        commandQueue.Enqueue (mechBuyCmd);
+                    }
+                    break;
+
+                case BrainCommand.BrainSell sellCmd:
+                    if (evalExpr(sellCmd.countExpr) is int sellCount)
+                    {
+                        MechCommand mechSellCmd = new MechCommand.MechSell
+                            (sellCmd.commodityName.name, sellCount);
+                        commandQueue.Enqueue(mechSellCmd);
+                    }
+                    break;
+
+                case BrainCommand.BrainInventory invCmd:
+                    MechCommand mechInvCmd
+                        = new MechCommand.MechInventory ();
+                    commandQueue.Enqueue (mechInvCmd);
+                    break;
+
+                case BrainCommand.BrainMarketPrices marketCmd:
+                    MechCommand mechMarketCmd =
+                        new MechCommand.MechMarketPrices ();
+                    commandQueue.Enqueue (mechMarketCmd);
+                    break;
+
+                case BrainCommand.BrainCityPrices cityCmd:
+                    MechCommand mechCityCmd =
+                        new MechCommand.MechCityPrices();
+                    commandQueue.Enqueue(mechCityCmd);
+                    break;
+
             }
         }
 

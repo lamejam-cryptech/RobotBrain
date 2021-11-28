@@ -184,6 +184,66 @@ namespace RobotBrain {
             }
         }
 
+
+        public sealed class BuyExpr : SyntaxTree
+        {
+            public readonly Identifier commodityName;
+            public readonly SyntaxTree countExpr;
+
+            public BuyExpr (Identifier name, SyntaxTree count) {
+                this.commodityName = name;
+                this.countExpr = count;
+            }
+
+            public override string show () {
+                return $"(Buy {commodityName.name} {countExpr.show ()})";
+            }
+        }
+
+        public sealed class SellExpr : SyntaxTree
+        {
+            public readonly Identifier commodityName;
+            public readonly SyntaxTree countExpr;
+
+            public SellExpr(Identifier name, SyntaxTree count)
+            {
+                this.commodityName = name;
+                this.countExpr = count;
+            }
+
+            public override string show()
+            {
+                return $"(Sell {commodityName.name} {countExpr.show()})";
+            }
+        }
+
+        public sealed class InventoryExpr : SyntaxTree
+        {
+            public InventoryExpr () { }
+
+            public override string show () {
+                return "Inventory";
+            }
+        }
+
+        public sealed class MarketPricesExpr : SyntaxTree
+        {
+            public MarketPricesExpr() { }
+
+            public override string show() {
+                return "MarketPrices";
+            }
+        }
+
+        public sealed class CityPricesExpr : SyntaxTree
+        {
+            public CityPricesExpr() { }
+
+            public override string show() {
+                return "CityPrices";
+            }
+        }
+
     }
     
 }
