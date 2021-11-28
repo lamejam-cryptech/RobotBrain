@@ -181,32 +181,32 @@ namespace RobotBrain
 
         public sealed class BrainBuy : BrainCommand
         {
-            public readonly Identifier commodityName;
+            public readonly SyntaxTree commodityId;
             public readonly SyntaxTree countExpr;
 
-            public BrainBuy (Identifier name, SyntaxTree count) {
-                this.commodityName = name;
+            public BrainBuy (SyntaxTree num, SyntaxTree count) {
+                this.commodityId = num;
                 this.countExpr = count;
             }
 
             public override string show () {
-                return $"buy {commodityName.name} {countExpr.show ()}";
+                return $"buy {commodityId.show ()} {countExpr.show ()}";
             }
         }
 
 
         public sealed class BrainSell : BrainCommand
         {
-            public readonly Identifier commodityName;
+            public readonly SyntaxTree commodityId;
             public readonly SyntaxTree countExpr;
 
-            public BrainSell(Identifier name, SyntaxTree count) {
-                this.commodityName = name;
+            public BrainSell(SyntaxTree num, SyntaxTree count) {
+                this.commodityId = num;
                 this.countExpr = count;
             }
 
             public override string show () {
-                return $"sell {commodityName.name} {countExpr.show()}";
+                return $"sell {commodityId.show ()} {countExpr.show()}";
             }
         }
 
@@ -295,12 +295,12 @@ namespace RobotBrain
 
                 case SyntaxTree.BuyExpr buyExpr:
                     BrainCommand buyCmd = new BrainCommand.BrainBuy
-                        (buyExpr.commodityName, buyExpr.countExpr);
+                        (buyExpr.commodityId, buyExpr.countExpr);
                     return new XList.Cons (buyCmd, con1);
 
                 case SyntaxTree.SellExpr sellExpr:
                     BrainCommand sellCmd = new BrainCommand.BrainSell
-                        (sellExpr.commodityName, sellExpr.countExpr);
+                        (sellExpr.commodityId, sellExpr.countExpr);
                     return new XList.Cons (sellCmd, con1);
 
                 case SyntaxTree.InventoryExpr invExpr:

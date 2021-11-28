@@ -172,25 +172,39 @@ namespace RobotBrain {
 
 
         public static SyntaxTree parseBuy (Parser parser) {
-            Token nameTok = parser.current ();
-            if (!nameTok.isIdentifier ())
+            Token tok = parser.current ();
+            if (!(tok.isIdentifier () || tok.isInteger ()))
                 return new SyntaxTree.SyntaxError
-                    ("expected identifier");
-            parser.consume ();
-            
+                    ("expected identifier or integer literal");
+
+            SyntaxTree commodity = parseExpression1 (parser);
+
+            tok = parser.current ();
+            if (!(tok.isIdentifier () || tok.isInteger ()))
+                return new SyntaxTree.SyntaxError
+                    ("expected identifier or integer literal");
+            SyntaxTree amount = parseExpression1 (parser);
+
             return new SyntaxTree.BuyExpr
-                (nameTok.ident, parseExpression1 (parser));
+                (commodity, amount);
         }
 
         public static SyntaxTree parseSell (Parser parser) {
-            Token nameTok = parser.current ();
-            if (!nameTok.isIdentifier ())
+            Token tok = parser.current ();
+            if (!(tok.isIdentifier () || tok.isInteger ()))
                 return new SyntaxTree.SyntaxError
-                    ("expected identifier");
-            parser.consume ();
+                    ("expected identifier or integer literal");
+
+            SyntaxTree commodity = parseExpression1 (parser);
+
+            tok = parser.current ();
+            if (!(tok.isIdentifier() || tok.isInteger()))
+                return new SyntaxTree.SyntaxError
+                    ("expected identifier or integer literal");
+            SyntaxTree amount = parseExpression1 (parser);
 
             return new SyntaxTree.SellExpr
-                (nameTok.ident, parseExpression1 (parser));
+                (commodity, amount);
         }
     }
     

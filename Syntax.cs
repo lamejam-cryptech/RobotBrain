@@ -187,33 +187,33 @@ namespace RobotBrain {
 
         public sealed class BuyExpr : SyntaxTree
         {
-            public readonly Identifier commodityName;
+            public readonly SyntaxTree commodityId;
             public readonly SyntaxTree countExpr;
 
-            public BuyExpr (Identifier name, SyntaxTree count) {
-                this.commodityName = name;
+            public BuyExpr (SyntaxTree num, SyntaxTree count) {
+                this.commodityId = num;
                 this.countExpr = count;
             }
 
             public override string show () {
-                return $"(Buy {commodityName.name} {countExpr.show ()})";
+                return $"(Buy {commodityId.show ()} {countExpr.show ()})";
             }
         }
 
         public sealed class SellExpr : SyntaxTree
         {
-            public readonly Identifier commodityName;
+            public readonly SyntaxTree commodityId;
             public readonly SyntaxTree countExpr;
 
-            public SellExpr(Identifier name, SyntaxTree count)
+            public SellExpr(SyntaxTree num, SyntaxTree count)
             {
-                this.commodityName = name;
+                this.commodityId = num;
                 this.countExpr = count;
             }
 
             public override string show()
             {
-                return $"(Sell {commodityName.name} {countExpr.show()})";
+                return $"(Sell {commodityId.show ()} {countExpr.show()})";
             }
         }
 

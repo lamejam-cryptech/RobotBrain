@@ -49,31 +49,31 @@ namespace RobotBrain {
 
         public sealed class MechBuy : MechCommand
         {
-            public readonly string commodityName;
+            public readonly int commodityId;
             public readonly int count;
 
-            public MechBuy (string name, int count) {
-                this.commodityName = name;
+            public MechBuy (int num, int count) {
+                this.commodityId = num;
                 this.count = count;
             }
 
             public override string show () {
-                return $"buy {commodityName} {count}";
+                return $"buy {commodityId} {count}";
             }
         }
 
         public sealed class MechSell : MechCommand
         {
-            public readonly string commodityName;
+            public readonly int commodityId;
             public readonly int count;
 
-            public MechSell (string name, int count) {
-                this.commodityName = name;
+            public MechSell (int num, int count) {
+                this.commodityId = num;
                 this.count = count;
             }
 
             public override string show () {
-                return $"sell {commodityName} {count}";
+                return $"sell {commodityId} {count}";
             }
         }
 

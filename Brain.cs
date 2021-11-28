@@ -154,17 +154,19 @@ namespace RobotBrain {
                     break;
 
                 case BrainCommand.BrainBuy buyCmd:
-                    if (evalExpr (buyCmd.countExpr) is int buyCount) {
+                    if (  evalExpr (buyCmd.commodityId) is int buyId
+                       && evalExpr (buyCmd.countExpr) is int buyCount) {
                         MechCommand mechBuyCmd = new MechCommand.MechBuy
-                            (buyCmd.commodityName.name, buyCount);
+                            (buyId, buyCount);
                         commandQueue.Enqueue (mechBuyCmd);
                     }
                     break;
 
                 case BrainCommand.BrainSell sellCmd:
-                    if (evalExpr(sellCmd.countExpr) is int sellCount) {
+                    if (  evalExpr (sellCmd.commodityId) is int sellId
+                       && evalExpr (sellCmd.countExpr) is int sellCount) {
                         MechCommand mechSellCmd = new MechCommand.MechSell
-                            (sellCmd.commodityName.name, sellCount);
+                            (sellId, sellCount);
                         commandQueue.Enqueue(mechSellCmd);
                     }
                     break;
