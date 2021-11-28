@@ -1,0 +1,64 @@
+
+KEYWORDS
+
+    help
+    alias
+    set
+    echo
+    landmarks
+
+    MOVEMENT
+    rotate
+    orient
+    toward
+    move
+    camera
+
+    MERCHANT-SPECIFIC
+    buy
+    sell
+    inventory
+    marketstat
+
+
+SYMBOLS
+
+    (
+    )
+    &&
+    =
+    |
+
+
+SYNTAX
+
+    int         :: ('0'-'9')*
+    heading     :: int 'N'
+    identifier  :: ('a'-'z' | 'A'-'Z') ('a'-'z' | 'A'-'Z' | '0'-'9')*
+
+    expression  :: command
+                 | command && expression
+    command     :: helpCmd
+                 | aliasCmd
+                 | setCmd
+                 | echoCmd
+                 | landmarkCmd
+                 | rotateCmd
+                 | orientCmd
+                 | towardCmd
+                 | moveCmd
+                 | cameraCmd
+
+    helpCmd     :: help
+    aliasCmd    :: alias identifier = expression
+    setCmd      :: set identifier = expression
+    echoCmd     :: echo identifier
+    landmarkCmd :: landmarks
+
+    rotateCmd   :: rotate int
+    orientCmd   :: orient heading
+    towardCmd   :: toward identifier
+    moveCmd     :: move identifier
+                 | move int
+    cameraCmd   :: camera
+
