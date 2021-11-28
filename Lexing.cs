@@ -160,7 +160,7 @@ namespace RobotBrain {
                     tok = new Token (ident);
             }
 
-            else if (isNumber (source[position]))
+            else if (isNumber (source[position]) || source[position] == '-')
                 tok = lexInteger ();
 
             else if (source[position] == '=') {
@@ -221,12 +221,16 @@ namespace RobotBrain {
         public Token lexInteger () {
             string text = "";
 
+            int sign = source[position] == '-' ? -1 : 1;
+            if (sign < 0)
+                position ++;
+
             while (isNumber (source[position])) {
                 text += source[position];
                 position ++;
             }
 
-            int val = int.Parse (text);
+            int val = sign * int.Parse (text);
             return new Token (val);
         }
     }

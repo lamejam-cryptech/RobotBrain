@@ -9,11 +9,11 @@ namespace RobotBrain {
     {
         private Hashtable variables;
 
-        private Queue<BrainCommand> commandQueue;
+        private Queue<MechCommand> commandQueue;
 
         public Brain () {
             this.variables = new Hashtable ();
-            this.commandQueue = new Queue<BrainCommand> ();
+            this.commandQueue = new Queue<MechCommand> ();
         }
 
 
@@ -34,10 +34,38 @@ namespace RobotBrain {
                         processTree (evalTree);
                         break;
 
-                    default:
-                        commandQueue.Enqueue (cmd);
+                    case BrainCommand.BrainRotate rotCmd:
+                        if (evalExpr (rotCmd.angleExpr) is int rotAngle) {
+                            MechCommand mechRotCmd = new MechCommand.MechRotate
+                                (rotAngle);
+                            commandQueue.Enqueue (mechRotCmd);
+                        }
+                        break;
+
+                    case BrainCommand.BrainMove movCmd:
+                        if (evalExpr (movCmd.distanceExpr) is int movDist) {
+                            MechCommand mechMovCmd = new MechCommand.MechMove
+                                (movDist);
+                           commandQueue.Enqueue (mechMovCmd);
+                        }
                         break;
                 }
+            }
+        }
+
+        // Evaluate a syntax tree to a literal.
+        //
+        public int? evalExpr (SyntaxTree expr) {
+            switch (expr) {
+                case SyntaxTree.IdentifierExpr idExpr:
+                    return evalExpr
+                        ((SyntaxTree) variables[idExpr.ident.name]);
+
+                case SyntaxTree.IntLiteralExpr litExpr:
+                    return litExpr.val;
+
+                default:
+                    return null;
             }
         }
 
@@ -51,8 +79,12 @@ namespace RobotBrain {
             return commandQueue.Count > 0;
         }
 
-        public BrainCommand nextCommand () {
+        public MechCommand nextCommand () {
             return commandQueue.Dequeue ();
+        }
+
+        public MechCommand peekCommand () {
+            return commandQueue.Peek ();
         }
     }
 

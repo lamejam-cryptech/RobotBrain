@@ -114,9 +114,9 @@ namespace RobotBrain
                 this.distanceExpr = expr;
             }
 
-            public override string show()
+            public override string show ()
             {
-                return $"rotate {distanceExpr.show()}";
+                return $"move {distanceExpr.show()}";
             }
         }
     }
