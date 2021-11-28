@@ -12,23 +12,23 @@ namespace RobotBrain {
 
         private bool endGame;
 
-        public bool shouldEndGame() {
+        public bool shouldEndGame () {
             return endGame;
         }
 
 
         private Queue<string> errorQueue;
         
-        public bool hasErrors() {
+        public bool hasErrors () {
             return errorQueue.Count > 0;
         }
 
-        public string nextError() {
-            return errorQueue.Dequeue();
+        public string nextError () {
+            return errorQueue.Dequeue ();
         }
 
-        public string peekError() {
-            return errorQueue.Peek();
+        public string peekError () {
+            return errorQueue.Peek ();
         }
 
 
@@ -44,31 +44,31 @@ namespace RobotBrain {
 
         private Queue<string> stdOut;
 
-        public bool hasStdOut() {
+        public bool hasStdOut () {
             return stdOut.Count > 0;
         }
 
-        public string nextStdOut() {
-            return stdOut.Dequeue();
+        public string nextStdOut () {
+            return stdOut.Dequeue ();
         }
 
-        public string peekStdOut() {
-            return stdOut.Peek();
+        public string peekStdOut () {
+            return stdOut.Peek ();
         }
 
 
         private Queue<MechCommand> commandQueue;
 
-        public bool hasCommands(){
+        public bool hasCommands () {
             return commandQueue.Count > 0;
         }
 
-        public MechCommand nextCommand(){
-            return commandQueue.Dequeue();
+        public MechCommand nextCommand () {
+            return commandQueue.Dequeue ();
         }
 
-        public MechCommand peekCommand(){
-            return commandQueue.Peek();
+        public MechCommand peekCommand () {
+            return commandQueue.Peek ();
         }
 
 
@@ -114,8 +114,14 @@ namespace RobotBrain {
                     break;
 
                 case BrainCommand.BrainEval evalCmd:
-                    SyntaxTree evalTree = variables[evalCmd.ident.name];
-                    processTree(evalTree);
+                    if (variables.ContainsKey (evalCmd.ident.name)) {
+                        SyntaxTree evalTree = variables[evalCmd.ident.name];
+                        processTree(evalTree);
+                    }
+                    else
+                        errorQueue.Enqueue
+                            ("error: "
+                            + $"unknown variable '{evalCmd.ident.name}'");
                     break;
 
                 case BrainCommand.BrainHelp helpCmd:
@@ -123,7 +129,12 @@ namespace RobotBrain {
                     break;
 
                 case BrainCommand.BrainEcho echoCmd:
-                    stdOut.Enqueue (variables[echoCmd.ident.name].show ());
+                    if (variables.ContainsKey (echoCmd.ident.name))
+                        stdOut.Enqueue (variables[echoCmd.ident.name].show ());
+                    else
+                        errorQueue.Enqueue
+                            ( "error: "
+                            + $"unknown variable '{echoCmd.ident.name}'" );
                     break;
 
                 case BrainCommand.BrainRotate rotCmd:
@@ -151,8 +162,7 @@ namespace RobotBrain {
                     break;
 
                 case BrainCommand.BrainSell sellCmd:
-                    if (evalExpr(sellCmd.countExpr) is int sellCount)
-                    {
+                    if (evalExpr(sellCmd.countExpr) is int sellCount) {
                         MechCommand mechSellCmd = new MechCommand.MechSell
                             (sellCmd.commodityName.name, sellCount);
                         commandQueue.Enqueue(mechSellCmd);
@@ -185,7 +195,15 @@ namespace RobotBrain {
         public int? evalExpr (SyntaxTree expr) {
             switch (expr) {
                 case SyntaxTree.IdentifierExpr idExpr:
-                    return evalExpr (variables[idExpr.ident.name]);
+                    if (variables.ContainsKey (idExpr.ident.name))
+                        return evalExpr (variables[idExpr.ident.name]);
+                    else {
+                        errorQueue.Enqueue
+                            ("error: "
+                            + $"unknown variable '{idExpr.ident.name}'");
+                        return null;
+                    }
+
 
                 case SyntaxTree.IntLiteralExpr litExpr:
                     return litExpr.val;

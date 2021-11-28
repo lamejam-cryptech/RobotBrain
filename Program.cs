@@ -15,6 +15,9 @@ namespace RobotBrain
 
                 brain.processLine (input);
 
+                if (brain.shouldEndGame ())
+                    break;
+
                 while (brain.hasErrors ())
                     Console.WriteLine (brain.nextError ());
 
