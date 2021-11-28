@@ -176,8 +176,16 @@ namespace RobotBrain {
                     tok = new Token (ident);
             }
 
-            else if (isNumber (source[position]) || source[position] == '-')
+            else if (isNumber (source[position]))
                 tok = lexInteger ();
+            else if (source[position] == '-') {
+                if (isNumber (source[position + 1]))
+                    tok = lexInteger ();
+                else {
+                    tok = new Token (position, '-');
+                    position ++;
+                }
+            }
 
             else if (source[position] == '=') {
                 position ++;
@@ -203,8 +211,8 @@ namespace RobotBrain {
             }
 
             else {
-                position ++;
                 tok = new Token (position, source[position]);
+                position ++;
             }
 
             return tok;
