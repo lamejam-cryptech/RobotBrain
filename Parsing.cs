@@ -51,7 +51,11 @@ namespace RobotBrain {
 
             // If the token is a keyword, parse the appropriate keyword
             // expression.
-            if (tok.match (Keyword.KeywordHelp))
+            if (tok.match (Keyword.KeywordQuit))
+                return new SyntaxTree.QuitExpr ();
+            else if (tok.match (Keyword.KeywordStop))
+                return new SyntaxTree.StopExpr ();
+            else if (tok.match (Keyword.KeywordHelp))
                 return new SyntaxTree.HelpExpr ();
             else if (tok.match (Keyword.KeywordLet))
                 return parseLet (parser);
@@ -112,11 +116,11 @@ namespace RobotBrain {
         public static SyntaxTree parseLet (Parser parser) {
             Token tokIdent = parser.current();
             if (!tokIdent.isIdentifier())
-                return new SyntaxTree.SyntaxError();
+                return new SyntaxTree.SyntaxError("expected identifier");
 
             Token tokEqual = parser.nextToken();
             if (!tokEqual.match(Symbol.SymSingleEq))
-                return new SyntaxTree.SyntaxError();
+                return new SyntaxTree.SyntaxError("expected '='");
             parser.consume();
 
             return new SyntaxTree.LetExpr
@@ -125,6 +129,8 @@ namespace RobotBrain {
 
         public static SyntaxTree parseEcho (Parser parser) {
             Token tokIdent = parser.current ();
+            if (!tokIdent.isIdentifier ())
+                return new SyntaxTree.SyntaxError ("expected identifier");
 
             return new SyntaxTree.EchoExpr (tokIdent.ident);
         }

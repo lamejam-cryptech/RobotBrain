@@ -9,6 +9,16 @@ namespace RobotBrain {
         public abstract string show ();
 
 
+        public sealed class MechStop : MechCommand
+        {
+            public MechStop () { }
+
+            public override string show () {
+                return "stop";
+            }
+        }
+
+
         public sealed class MechRotate : MechCommand
         {
             public readonly int angle;

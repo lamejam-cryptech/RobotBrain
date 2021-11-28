@@ -6,6 +6,8 @@ using System.Collections.Generic;
 namespace RobotBrain {
     
     public enum Keyword {
+        KeywordQuit,
+        KeywordStop,
         KeywordHelp,
         KeywordLet,
         KeywordEcho,
@@ -126,6 +128,8 @@ namespace RobotBrain {
 
         public Lexer (string source) {
             keywords = new Dictionary<string, Keyword> ();
+            keywords.Add ("quit"    , Keyword.KeywordQuit);
+            keywords.Add ("stop"    , Keyword.KeywordStop);
             keywords.Add ("help"    , Keyword.KeywordHelp);
             keywords.Add ("let"     , Keyword.KeywordLet);
             keywords.Add ("echo"    , Keyword.KeywordEcho);

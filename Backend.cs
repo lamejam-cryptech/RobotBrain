@@ -51,6 +51,50 @@ namespace RobotBrain
         public abstract string show ();
 
 
+        public sealed class BrainError : BrainCommand
+        {
+            public readonly string message;
+
+            public BrainError (string msg) {
+                this.message = msg;
+            }
+
+            public override string show () {
+                return $"error: {message}";
+            }
+        }
+
+        public sealed class BrainSyntaxError : BrainCommand
+        {
+            public readonly SyntaxTree.SyntaxError err;
+
+            public BrainSyntaxError (SyntaxTree.SyntaxError err) {
+                this.err = err;
+            }
+
+            public override string show () {
+                return err.show ();
+            }
+        }
+
+        public sealed class BrainQuit : BrainCommand
+        {
+            public BrainQuit () { }
+
+            public override string show () {
+                return "quit";
+            }
+        }
+
+        public sealed class BrainStop : BrainCommand
+        {
+            public BrainStop () { }
+
+            public override string show () {
+                return "stop";
+            }
+        }
+
         public sealed class BrainLet : BrainCommand
         {
             public readonly Identifier lhs;
@@ -128,6 +172,19 @@ namespace RobotBrain
             ( SyntaxTree tree, XList con1 )
         {
             switch (tree) {
+                case SyntaxTree.SyntaxError errExpr:
+                    BrainCommand syntaxError =
+                        new BrainCommand.BrainSyntaxError (errExpr);
+                    return new XList.Cons (syntaxError, con1);
+
+                case SyntaxTree.QuitExpr quitExpr:
+                    return new XList.Cons
+                        (new BrainCommand.BrainQuit (), con1);
+
+                case SyntaxTree.StopExpr stopExpr:
+                    return new XList.Cons
+                        (new BrainCommand.BrainStop(), con1);
+
                 case SyntaxTree.ContinueExpr expr:
                     XList con2 = walkTreeConvert (expr.cexpr, con1);
                     XList con3 = walkTreeConvert (expr.lexpr, con2);
@@ -163,7 +220,9 @@ namespace RobotBrain
 
 
                 default:
-                    return null;
+                    BrainCommand err = new BrainCommand.BrainError
+                        ("unrecognized command");
+                    return new XList.Cons (err, con1);
             }
         }
 

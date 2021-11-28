@@ -100,6 +100,27 @@ namespace RobotBrain {
         }
 
 
+        public sealed class QuitExpr : SyntaxTree
+        {
+            public QuitExpr () { }
+
+            public override string show () {
+                return "Quit";
+            }
+        }
+
+
+        public sealed class StopExpr : SyntaxTree
+        {
+            public StopExpr() { }
+
+            public override string show()
+            {
+                return "Stop";
+            }
+        }
+
+
         public sealed class HelpExpr : SyntaxTree {
             public HelpExpr () { }
 
